@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -15,18 +15,31 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        digit:
+          "bg-[hsl(var(--calc-digit))] text-foreground text-2xl font-normal rounded-full hover:bg-[hsl(var(--calc-digit-hover))] active:bg-[hsl(var(--calc-digit-active))] active:scale-95",
+        operator:
+          "bg-[hsl(var(--calc-operator))] text-primary-foreground text-2xl font-normal rounded-full hover:bg-[hsl(var(--calc-operator-hover))] active:scale-95",
+        function:
+          "bg-[hsl(var(--calc-function))] text-[hsl(var(--calc-function-text))] text-xl font-medium rounded-full hover:bg-[hsl(var(--calc-function-hover))] active:scale-95",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        calc: "h-16 w-16",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
     },
+    compoundVariants: [
+      {
+        variant: ["digit", "operator", "function"],
+        className: "h-16 aspect-square",
+      },
+    ],
   },
 );
 
