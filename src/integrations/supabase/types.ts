@@ -14,16 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          amount: number
+          booking_type: string
+          created_at: string
+          id: string
+          listener_id: string
+          meet_link: string | null
+          scheduled_at: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          booking_type: string
+          created_at?: string
+          id?: string
+          listener_id: string
+          meet_link?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          booking_type?: string
+          created_at?: string
+          id?: string
+          listener_id?: string
+          meet_link?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_listener_id_fkey"
+            columns: ["listener_id"]
+            isOneToOne: false
+            referencedRelation: "listeners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listeners: {
+        Row: {
+          avatar_color: string | null
+          bio: string | null
+          categories: string[] | null
+          created_at: string
+          currency: string | null
+          id: string
+          initials: string
+          is_active: boolean | null
+          name: string
+          rating: number | null
+          review_count: number | null
+          tagline: string | null
+          updated_at: string
+          video_price: number
+          voice_price: number
+        }
+        Insert: {
+          avatar_color?: string | null
+          bio?: string | null
+          categories?: string[] | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          initials: string
+          is_active?: boolean | null
+          name: string
+          rating?: number | null
+          review_count?: number | null
+          tagline?: string | null
+          updated_at?: string
+          video_price?: number
+          voice_price?: number
+        }
+        Update: {
+          avatar_color?: string | null
+          bio?: string | null
+          categories?: string[] | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          initials?: string
+          is_active?: boolean | null
+          name?: string
+          rating?: number | null
+          review_count?: number | null
+          tagline?: string | null
+          updated_at?: string
+          video_price?: number
+          voice_price?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          country: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          content: Json | null
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +334,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
