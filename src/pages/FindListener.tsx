@@ -24,6 +24,7 @@ interface Listener {
   voice_price: number;
   video_price: number;
   avatar_color: string | null;
+  currency: string | null;
 }
 
 const categories = ['All', 'Relationship', 'Career', 'Anxiety', 'Stress', 'Family', 'Motivation'];
@@ -33,6 +34,7 @@ export default function FindListener() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [userCurrency, setUserCurrency] = useState<'USD' | 'INR'>('USD');
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -40,7 +42,29 @@ export default function FindListener() {
 
   useEffect(() => {
     fetchListeners();
-  }, []);
+    fetchUserCurrency();
+  }, [user]);
+
+  const fetchUserCurrency = async () => {
+    if (!user) {
+      setUserCurrency('USD');
+      return;
+    }
+    
+    // Get user's country from profile
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('country')
+      .eq('user_id', user.id)
+      .single();
+    
+    if (profile?.country) {
+      // Check if user is from India
+      const isIndian = profile.country.toLowerCase().includes('india') || 
+                       profile.country.includes('INR');
+      setUserCurrency(isIndian ? 'INR' : 'USD');
+    }
+  };
 
   const fetchListeners = async () => {
     const { data, error } = await supabase
@@ -70,7 +94,10 @@ export default function FindListener() {
       selectedCategory === 'All' || 
       listener.categories?.includes(selectedCategory);
 
-    return matchesSearch && matchesCategory;
+    // Filter by user's currency preference
+    const matchesCurrency = listener.currency === userCurrency;
+
+    return matchesSearch && matchesCategory && matchesCurrency;
   });
 
   const handleBook = (listener: Listener, type: 'voice' | 'video') => {
@@ -141,6 +168,25 @@ export default function FindListener() {
             </div>
           </div>
         </section>
+
+        {/* Currency Indicator */}
+        <div className="container py-4">
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted text-sm">
+              {userCurrency === 'INR' ? (
+                <>
+                  <span>🇮🇳</span>
+                  <span>Showing prices in Indian Rupees (₹)</span>
+                </>
+              ) : (
+                <>
+                  <span>🇺🇸</span>
+                  <span>Showing prices in US Dollars ($)</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
         {/* Filters */}
         <section className="py-8 border-b border-border/50">
