@@ -402,80 +402,14 @@ export default function Admin() {
         )}
 
         {activeTab === 'listeners' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Manage Listeners</h1>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button onClick={() => setEditingListener({} as Listener)}>
-                    <Plus className="w-4 h-4" />
-                    Add Listener
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Add New Listener</DialogTitle>
-                  </DialogHeader>
-                  <ListenerForm 
-                    listener={editingListener}
-                    onSave={saveListener}
-                    onCancel={() => setEditingListener(null)}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            <div className="space-y-4">
-              {listeners.map((listener) => (
-                <div key={listener.id} className="glass-card p-4 flex items-center gap-4">
-                  <div 
-                    className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-background shrink-0"
-                    style={{ backgroundColor: listener.avatar_color || '#38bdf8' }}
-                  >
-                    {listener.initials}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold">{listener.name}</h3>
-                    <p className="text-sm text-muted-foreground">{listener.tagline}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      listener.is_active 
-                        ? 'bg-success/20 text-success' 
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {listener.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button size="icon" variant="ghost" onClick={() => setEditingListener(listener)}>
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Edit Listener</DialogTitle>
-                        </DialogHeader>
-                        <ListenerForm 
-                          listener={listener}
-                          onSave={saveListener}
-                          onCancel={() => setEditingListener(null)}
-                        />
-                      </DialogContent>
-                    </Dialog>
-                    <Button 
-                      size="icon" 
-                      variant="ghost" 
-                      className="text-destructive"
-                      onClick={() => deleteListener(listener.id)}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ListenersTab 
+            listeners={listeners}
+            onEdit={(listener) => setEditingListener(listener)}
+            onDelete={deleteListener}
+            onSave={saveListener}
+            editingListener={editingListener}
+            onCancelEdit={() => setEditingListener(null)}
+          />
         )}
 
         {activeTab === 'content' && (
@@ -594,7 +528,165 @@ export default function Admin() {
   );
 }
 
-function ListenerForm({ 
+function ListenersTab({ 
+  listeners,
+  onEdit,
+  onDelete,
+  onSave,
+  editingListener,
+  onCancelEdit
+}: { 
+  listeners: Listener[];
+  onEdit: (listener: Listener) => void;
+  onDelete: (id: string) => void;
+  onSave: (listener: Partial<Listener> & { initials: string; name: string }) => void;
+  editingListener: Listener | null;
+  onCancelEdit: () => void;
+}) {
+  const [currencyFilter, setCurrencyFilter] = useState<'all' | 'USD' | 'INR'>('all');
+
+  const filteredListeners = listeners.filter((listener) => {
+    if (currencyFilter === 'all') return true;
+    return listener.currency === currencyFilter;
+  });
+
+  const usdCount = listeners.filter(l => l.currency === 'USD').length;
+  const inrCount = listeners.filter(l => l.currency === 'INR').length;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Manage Listeners</h1>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button onClick={() => onEdit({} as Listener)}>
+              <Plus className="w-4 h-4" />
+              Add Listener
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Listener</DialogTitle>
+            </DialogHeader>
+            <ListenerForm 
+              listener={editingListener}
+              onSave={onSave}
+              onCancel={onCancelEdit}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Currency Filter Tabs */}
+      <div className="flex gap-2 p-1 bg-muted rounded-lg w-fit">
+        <button
+          onClick={() => setCurrencyFilter('all')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            currencyFilter === 'all' 
+              ? 'bg-background text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          All ({listeners.length})
+        </button>
+        <button
+          onClick={() => setCurrencyFilter('USD')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+            currencyFilter === 'USD' 
+              ? 'bg-background text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          🇺🇸 US Users ({usdCount})
+        </button>
+        <button
+          onClick={() => setCurrencyFilter('INR')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
+            currencyFilter === 'INR' 
+              ? 'bg-background text-foreground shadow-sm' 
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          🇮🇳 Indian Users ({inrCount})
+        </button>
+      </div>
+
+      <p className="text-sm text-muted-foreground">
+        {currencyFilter === 'USD' && 'Showing listeners for US users (prices in USD $)'}
+        {currencyFilter === 'INR' && 'Showing listeners for Indian users (prices in INR ₹)'}
+        {currencyFilter === 'all' && 'Showing all listeners'}
+      </p>
+
+      <div className="space-y-4">
+        {filteredListeners.map((listener) => (
+          <div key={listener.id} className="glass-card p-4 flex items-center gap-4">
+            <div 
+              className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-background shrink-0"
+              style={{ backgroundColor: listener.avatar_color || '#38bdf8' }}
+            >
+              {listener.initials}
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold">{listener.name}</h3>
+              <p className="text-sm text-muted-foreground">{listener.tagline}</p>
+              <p className="text-xs text-primary mt-1">
+                {listener.currency === 'INR' ? '🇮🇳 ₹' : '🇺🇸 $'}{listener.voice_price} / {listener.currency === 'INR' ? '₹' : '$'}{listener.video_price}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-1 rounded text-xs ${
+                listener.is_active 
+                  ? 'bg-success/20 text-success' 
+                  : 'bg-muted text-muted-foreground'
+              }`}>
+                {listener.is_active ? 'Active' : 'Inactive'}
+              </span>
+              <span className={`px-2 py-1 rounded text-xs ${
+                listener.currency === 'INR' 
+                  ? 'bg-orange-500/20 text-orange-400' 
+                  : 'bg-blue-500/20 text-blue-400'
+              }`}>
+                {listener.currency === 'INR' ? '₹ INR' : '$ USD'}
+              </span>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="icon" variant="ghost" onClick={() => onEdit(listener)}>
+                    <Edit className="w-4 h-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Edit Listener</DialogTitle>
+                  </DialogHeader>
+                  <ListenerForm 
+                    listener={listener}
+                    onSave={onSave}
+                    onCancel={onCancelEdit}
+                  />
+                </DialogContent>
+              </Dialog>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-destructive"
+                onClick={() => onDelete(listener.id)}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        ))}
+        {filteredListeners.length === 0 && (
+          <div className="text-center py-8 text-muted-foreground">
+            No listeners found for this currency filter
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ListenerForm({
   listener, 
   onSave, 
   onCancel 

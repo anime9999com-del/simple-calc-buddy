@@ -13,6 +13,7 @@ interface Listener {
   voice_price: number;
   video_price: number;
   avatar_color: string | null;
+  currency: string | null;
 }
 
 interface ListenerCardProps {
@@ -62,7 +63,7 @@ export function ListenerCard({ listener, onBook }: ListenerCardProps) {
           onClick={() => onBook(listener, 'voice')}
         >
           <Phone className="w-4 h-4" />
-          Voice ${listener.voice_price}
+          Voice {listener.currency === 'INR' ? '₹' : '$'}{listener.voice_price}
         </Button>
         <Button 
           variant="outline" 
@@ -70,7 +71,7 @@ export function ListenerCard({ listener, onBook }: ListenerCardProps) {
           onClick={() => onBook(listener, 'video')}
         >
           <Video className="w-4 h-4" />
-          Video ${listener.video_price}
+          Video {listener.currency === 'INR' ? '₹' : '$'}{listener.video_price}
         </Button>
       </div>
     </div>
