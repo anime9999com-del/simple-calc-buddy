@@ -1,4 +1,4 @@
-import cityBackground from '@/assets/city-background.jpg';
+import lampBackground from '@/assets/lamp-background.jpg';
 import { SnowEffect } from './SnowEffect';
 
 export function BackgroundEffects() {
@@ -9,7 +9,7 @@ export function BackgroundEffects() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(${cityBackground})`
+            backgroundImage: `url(${lampBackground})`
           }}
         />
         
