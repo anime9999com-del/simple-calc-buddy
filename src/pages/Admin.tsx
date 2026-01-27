@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Users, 
@@ -19,7 +19,8 @@ import {
   Calendar,
   Video,
   Phone,
-  Link
+  Link as LinkIcon,
+  Home
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
@@ -295,9 +296,17 @@ export default function Admin() {
       <BackgroundEffects />
       {/* Sidebar */}
       <aside className="w-64 border-r border-border bg-card/80 backdrop-blur-sm p-4 flex flex-col relative z-10">
-        <div className="mb-8">
+        <div className="mb-4">
           <Logo />
         </div>
+        
+        <Link
+          to="/"
+          className="flex items-center gap-3 px-4 py-2 mb-6 text-muted-foreground hover:bg-muted rounded-lg transition-colors border border-border/50"
+        >
+          <Home className="w-5 h-5" />
+          Back to Website
+        </Link>
         
         <nav className="flex-1 space-y-2">
           <button
@@ -954,13 +963,13 @@ function BookingsTab({
                   onClick={() => handleSaveMeetLink(booking.id)}
                   disabled={!meetLinks[booking.id]?.trim() || meetLinks[booking.id] === booking.meet_link}
                 >
-                  <Link className="w-4 h-4 mr-1" />
+                  <LinkIcon className="w-4 h-4 mr-1" />
                   Save & Confirm
                 </Button>
               </div>
               {booking.meet_link && (
                 <p className="text-xs text-success mt-2 flex items-center gap-1">
-                  <Link className="w-3 h-3" />
+                  <LinkIcon className="w-3 h-3" />
                   Link sent: {booking.meet_link}
                 </p>
               )}
