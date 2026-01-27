@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { UserPlus, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -96,15 +95,7 @@ export default function Auth() {
       <main className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="glass-card w-full max-w-md p-8 animate-fade-in">
           <div className="flex justify-center mb-6">
-            {mode === 'signup' ? (
-              <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center">
-                <UserPlus className="w-8 h-8 text-accent-foreground" />
-              </div>
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center">
-                <MessageCircle className="w-8 h-8 text-primary fill-primary" />
-              </div>
-            )}
+            <Logo size="lg" showText={false} />
           </div>
 
           <h1 className="text-2xl font-bold text-center mb-2">
