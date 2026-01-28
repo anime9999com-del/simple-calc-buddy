@@ -10,8 +10,10 @@ import FindListener from "./pages/FindListener";
 import Bookings from "./pages/Bookings";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
+import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import Refunds from "./pages/Refunds";
 import NotFound from "./pages/NotFound";
-
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -28,6 +30,9 @@ const App = () => (
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/refunds" element={<Refunds />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

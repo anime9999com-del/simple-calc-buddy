@@ -11,7 +11,7 @@ export function Footer() {
       {/* Subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent pointer-events-none" />
       <div className="container py-16 relative">
-        <div className={`grid grid-cols-1 ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-8`}>
+        <div className={`grid grid-cols-1 ${isAdmin ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-8`}>
           <div className="space-y-4">
             <Logo />
             <p className="text-sm text-muted-foreground max-w-xs">
@@ -30,6 +30,27 @@ export function Footer() {
               <li>
                 <Link to="/find-listener" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Find a Friend
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-semibold text-foreground">Legal</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/refunds" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Cancellations & Refunds
                 </Link>
               </li>
             </ul>
