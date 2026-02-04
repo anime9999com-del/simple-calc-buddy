@@ -13,6 +13,7 @@ interface RazorpayOptions {
   listenerName: string;
   bookingType: 'voice' | 'video';
   amount: number;
+  currency: 'USD' | 'INR';
   userEmail: string;
   userName: string;
   onSuccess: (bookingId: string) => void;
