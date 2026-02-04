@@ -52,6 +52,7 @@ export function useRazorpay() {
     listenerName,
     bookingType,
     amount,
+    currency,
     userEmail,
     userName,
     onSuccess,
