@@ -80,6 +80,7 @@ export function useRazorpay() {
             listener_id: listenerId,
             booking_type: bookingType,
             amount,
+            currency,
           },
         }
       );

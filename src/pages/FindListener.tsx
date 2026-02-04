@@ -117,6 +117,7 @@ export default function FindListener() {
       listenerName: listener.name,
       bookingType: type,
       amount,
+      currency: (listener.currency as 'USD' | 'INR') || 'INR',
       userEmail: user.email || '',
       userName: user.user_metadata?.full_name || user.email || '',
       onSuccess: (bookingId) => {
