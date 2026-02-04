@@ -800,16 +800,20 @@ function ListenerForm({
           <Label>Voice Price ({currencySymbol})</Label>
           <Input 
             type="number"
+            step="0.01"
+            min="0"
             value={form.voice_price} 
-            onChange={(e) => setForm({ ...form, voice_price: parseInt(e.target.value) || 0 })}
+            onChange={(e) => setForm({ ...form, voice_price: parseFloat(e.target.value) || 0 })}
           />
         </div>
         <div className="space-y-2">
           <Label>Video Price ({currencySymbol})</Label>
           <Input 
             type="number"
+            step="0.01"
+            min="0"
             value={form.video_price} 
-            onChange={(e) => setForm({ ...form, video_price: parseInt(e.target.value) || 0 })}
+            onChange={(e) => setForm({ ...form, video_price: parseFloat(e.target.value) || 0 })}
           />
         </div>
       </div>

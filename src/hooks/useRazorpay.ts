@@ -13,6 +13,7 @@ interface RazorpayOptions {
   listenerName: string;
   bookingType: 'voice' | 'video';
   amount: number;
+  currency: 'USD' | 'INR';
   userEmail: string;
   userName: string;
   onSuccess: (bookingId: string) => void;
@@ -51,6 +52,7 @@ export function useRazorpay() {
     listenerName,
     bookingType,
     amount,
+    currency,
     userEmail,
     userName,
     onSuccess,
@@ -78,6 +80,7 @@ export function useRazorpay() {
             listener_id: listenerId,
             booking_type: bookingType,
             amount,
+            currency,
           },
         }
       );

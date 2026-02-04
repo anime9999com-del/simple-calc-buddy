@@ -44,13 +44,22 @@ serve(async (req) => {
       );
     }
 
-    const { listener_id, booking_type, amount } = await req.json();
+    const { listener_id, booking_type, amount, currency } = await req.json();
 
     if (!listener_id || !booking_type || !amount) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // USD to INR conversion rate
+    const USD_TO_INR_RATE = 90.39;
+    
+    // Calculate amount in INR - if currency is USD, convert to INR
+    let amountInINR = amount;
+    if (currency === 'USD') {
+      amountInINR = amount * USD_TO_INR_RATE;
     }
 
     // Create Razorpay order
@@ -61,13 +70,15 @@ serve(async (req) => {
         'Authorization': 'Basic ' + btoa(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`),
       },
       body: JSON.stringify({
-        amount: Math.round(amount * 100), // Convert to paise
+        amount: Math.round(amountInINR * 100), // Convert to paise
         currency: 'INR',
         receipt: `booking_${Date.now()}`,
         notes: {
           listener_id,
           booking_type,
           user_id: claimsData.user.id,
+          original_currency: currency || 'INR',
+          original_amount: amount,
         },
       }),
     });
